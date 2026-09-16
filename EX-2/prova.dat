@@ -1,0 +1,10 @@
+#Posizione iniziale=2.000000
+#Velocita' iniziale=3.000000
+#Pulsazione al quadrato=4.000000
+#Tempo massimo di integrazione=5.000000
+#Passo di tempo=6.000000
+#E' stato utilizzato l'algoritmo di Eulero-Cromer
+#Legenda
+#1:t 2:x 3:v 4:dE
+0 2.000000 3.000000 0
+6.000000 -268.000000 -45.000000 2728.443396

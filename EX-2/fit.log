@@ -1,0 +1,53 @@
+
+
+*******************************************************************************
+Tue Oct 13 21:03:34 2020
+
+
+FIT:    data read from 'energia.dat' u 1:2
+        format = x:z
+        #datapoints = 5
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a+b+c^2
+BREAK: Need via and either parameter list or file
+
+*******************************************************************************
+Tue Oct 13 21:03:45 2020
+
+
+FIT:    data read from "energia.dat" u 1:2
+        format = x:z
+        #datapoints = 5
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a+b+c^2
+BREAK: Need via and either parameter list or file
+
+*******************************************************************************
+Tue Oct 13 21:04:09 2020
+
+
+FIT:    data read from 'energia.dat' u 1:2
+        format = x:z
+        #datapoints = 5
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a+b+c^2
+BREAK: Need via and either parameter list or file
+
+*******************************************************************************
+Tue Oct 13 21:04:39 2020
+
+
+FIT:    data read from 'energia.dat' u 1:2
+        format = x:z
+        #datapoints = 5
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a+b+c^2
+BREAK: Need via and either parameter list or file
