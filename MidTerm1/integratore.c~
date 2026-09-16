@@ -1,0 +1,242 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+double m=1;
+double l;
+
+typedef struct{
+    double x,v,dt;
+    int n, tmax, algo;
+} param;
+
+//ACCELERAZIONE
+double ac(double x, double v, double t){
+  return exp(-x/2)*log(x)*(log(x)-(4./x))-l*v;
+}
+
+void eulero(param s){
+  double x, v, temp;
+  int i;
+  x=s.x;
+  v=s.v;
+  for(i=0;i<s.n;i++){
+    printf("%lg %.14lf %.14lf\n",i*s.dt ,x ,v);
+    temp=x;
+    x=x+v*s.dt;
+    v=v+ac(temp,v,0)*s.dt;
+  }
+  printf("%lg %.14lf %.14lf\n", i*s.dt, x, v);
+}
+
+
+void cromer(param s){
+  double x, v;
+  int i;
+  x=s.x;
+  v=s.v;
+  for(i=0;i<s.n;i++){
+    printf("%lg %.14lf %.14lf\n",i*s.dt ,x ,v);
+    v=v+ac(x,v,0)*s.dt;
+    x=x+v*s.dt;
+  }
+  printf("%lg %.14lf %.14lf\n", i*s.dt, x, v);
+}
+
+
+void leapfrog(param s){
+  double x, v;
+  int i;
+  x=s.x;
+  v=s.v+ac(s.x,s.v,0)*(s.dt/2);
+  for(i=0;i<s.n;i++){
+    printf("%lg %.14lf %.14lf\n",i*s.dt ,x ,v-ac(x,v,0)*(s.dt/2));
+    x=x+v*s.dt;
+    v=v+ac(x,v,0)*s.dt;
+  }
+  printf("%lg %.14lf %.14lf\n", i*s.dt, x, v-ac(x,v,0)*(s.dt/2));
+}
+
+void verletvelocita(param s){
+  double x, v, a, temp;
+  int i;
+  x=s.x;
+  v=s.v;
+  a=ac(s.x,s.v,0);
+  for(i=0;i<s.n;i++){
+    printf("%lg %.14lf %.14lf\n",i*s.dt ,x ,v);
+    x=x+v*s.dt+(0.5)*a*(s.dt*s.dt);
+    temp=a;
+    a=ac(x,v,0);
+    v=v+((temp+a)/2)*s.dt;
+  }
+  printf("%lg %.14lf %.14lf\n", i*s.dt, x, v);
+}
+
+void verletposizioni(param s){
+  double x, xnew, xold, v, a;
+  int i;
+  x=s.x;
+  v=s.v;
+  a=ac(s.x,s.v,0);
+  xnew=x+v*s.dt+(0.5)*a*(s.dt*s.dt);
+  for(i=0;i<s.n;i++){
+    printf("%lg %.14lf %.14lf\n",i*s.dt ,x ,v);
+    xold=x;
+    x=xnew;
+    a=ac(x,v,0); 
+    xnew=2*x-xold+a*(s.dt*s.dt);
+    v=(xnew-xold)/(2*s.dt);
+  }
+  printf("%lg %.14lf %.14lf\n", i*s.dt, x, v);
+}
+
+
+void rk2(param s){
+  double x,xold, v;
+  int i;
+  x=s.x;
+  v=s.v;
+  for(i=0;i<s.n;i++){
+    printf("%lg %.14lf %.14lf\n",i*s.dt ,x ,v);
+    xold=x;
+    //x=x+v*dt+0.5*a(x,0,0)*dt*dt;
+    //v=v+0.5*a(xold,0,0)*dt+0.5*a(xold+v*dt,0,0)*dt;
+    x=x+(v+ac(x,v,0)*s.dt*0.5)*s.dt;
+    v=v+ac((xold+v*s.dt*0.5),(v+ac(xold,v,0)*s.dt*0.5),0)*s.dt;
+      
+  }
+  printf("%lg %.14lf %.14lf\n", i*s.dt, x, v);
+}
+
+
+void rk4(param s){
+  double x,dx1, dx2, dx3, dx4;
+  double v,dv1, dv2, dv3, dv4;
+  int i;
+  x=s.x;
+  v=s.v;
+  for(i=0;i<s.n;i++){
+    printf("%lg %.14lf %.14lf\n",i*s.dt ,x ,v);
+    dx1=v*s.dt;
+    dv1=ac(x,v,i*s.dt)*s.dt;
+    
+    dx2=(v+dv1/2)*s.dt;
+    dv2=ac(x+dx1/2,v+dv1/2,i*s.dt+s.dt/2)*s.dt;
+    
+    dx3=(v+dv2/2)*s.dt;
+    dv3=ac(x+dx2/2,v+dv2/2,i*s.dt+s.dt/2)*s.dt;
+    
+    dx4=(v+dv3)*s.dt;
+    dv4=ac(x+dx3,v+dv3,i*s.dt+s.dt)*s.dt;
+    
+    x=x+(dx1+2*dx2+2*dx3+dx4)/6;
+    v=v+(dv1+2*dv2+2*dv3+dv4)/6;
+  }
+  printf("%lg %.14lf %.14lf\n", i*s.dt, x, v);
+}
+
+int main(int argc, char *argv[]){
+    param rb;
+    int control;
+
+    if(argc != 6){
+        fprintf(stderr,"Hai sbagliato a inserire qualche dato\n");
+        fprintf(stderr,"usage:%s 1)velocita' 2)dt 3)tmax 4)algoritmo 5)coefficente\n\n",argv[0]);
+	fprintf(stderr,"I dati devono essere tutti equispaziati da uno spazio\n\n");
+	fprintf(stderr,"Il valore della velocita' inserito deve essere in valore assoluto,\n");
+	fprintf(stderr,"in quanto una volta inserito il programma lo considerera' come negativo\n\n");
+	fprintf(stderr,"Sono disponibili 7 tipi diversi di algoritmo:\n");
+	fprintf(stderr,"1:Eulero, 2:Eulero-Cromer, 3:LeapFrog, 4:Verlet-Velocita', 5:Verlet-Posizioni,\n");
+	fprintf(stderr,"6:Runge-Kutta del secondo ordine, 7:Runge-Kutta del quarto ordine\n\n");
+	fprintf(stderr,"Il coefficente per la parte di attrito può anche essere posto uguale a 0,\n");
+	fprintf(stderr,"in questo modo, oviamente, non verra' considerata la parte di attrito nel moto\n\n");
+        fprintf(stderr,"STO USCENDO...\n");
+        exit(EXIT_FAILURE);
+    }
+
+    rb.x = 10;
+    printf("#Posizione iniziale-->%lg\n",rb.x);
+    rb.v = -(atof(argv[1]));
+    printf("#Velocita' iniziale-->%lg\n",rb.v);
+    rb.dt = atof(argv[2]);
+    printf("#Passo di integrazione-->%g\n",rb.dt);
+    rb.tmax = atoi(argv[3]);
+    printf("#Tempo massimo di integrazione-->%i\n",rb.tmax);
+    rb.algo = atoi(argv[4]);
+
+    l=atof(argv[5]);
+    printf("#Coefficente lambda-->%g\n",l);
+    
+    rb.n=ceil(rb.tmax/rb.dt);
+    printf("#Numero di passi-->%i\n",rb.n);
+
+  if(rb.algo==1){
+    printf("#E' stato utilizzato l'algoritmo di Eulero\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v\n");
+    eulero(rb);
+    control=1;
+  }
+    
+  if(rb.algo==2){
+    printf("#E' stato utilizzato l'algoritmo di Eulero-Cromer\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v\n");
+    cromer(rb);
+    control=1;
+  }
+
+  if(rb.algo==3){
+    printf("#E' stato utilizzato l'algoritmo Leap Frog\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v\n");
+    leapfrog(rb);
+    control=1;
+  }
+
+  if(rb.algo==4){
+    printf("#E' stato utilizzato l'algoritmo Verlet-Velocita'\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v\n");
+    verletvelocita(rb);
+    control=1;
+  }
+
+  if(rb.algo==5){
+    printf("#E' stato utilizzato l'algoritmo Verlet-Posizioni\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v\n");
+    verletposizioni(rb);
+    control=1;
+  }
+
+  if(rb.algo==6){
+    printf("#E' stato utilizzato l'algoritmo Runge-Kutta del secondo ordine\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v\n");
+    rk2(rb);
+    control=1;
+  }
+
+  if(rb.algo==7){
+    printf("#E' stato utilizzato l'algoritmo Runge-Kutta del quarto ordine\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v\n");
+    rk4(rb);
+    control=1;
+  }
+  
+  
+  if(control==0){
+    fprintf(stderr,"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    fprintf(stderr,"Attenzione\n");
+    fprintf(stderr,"C'e' stato un errore nella scelta dell'algoritmo, sto uscento...\n");
+    fprintf(stderr,"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+  }
+
+  exit(EXIT_SUCCESS);
+
+
+  
+}

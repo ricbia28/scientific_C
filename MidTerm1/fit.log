@@ -1,0 +1,38 @@
+
+
+*******************************************************************************
+Fri Oct 30 23:02:41 2020
+
+
+FIT:    data read from 'energia.dat' u 5:4
+        format = x:z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a+b*x+c*x**2
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 1.0040362785e+01   0.00e+00  5.77e-01    1.000000e+00   1.000000e+00   1.000000e+00
+  10 3.1899564692e-26  -1.09e-07  5.77e+00    3.895582e-14  -1.387549e-11   1.668177e-03
+
+After 10 iterations the fit converged.
+final sum of squares of residuals : 3.18996e-26
+rel. change during last iteration : -1.0866e-12
+
+degrees of freedom    (FIT_NDF)                        : 7
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 6.75062e-14
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.55708e-27
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 3.89558e-14      +/- 2.918e-14    (74.89%)
+b               = -1.38755e-11     +/- 2.553e-11    (184%)
+c               = 0.00166818       +/- 2.617e-09    (0.0001569%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b              -0.598  1.000 
+c               0.486 -0.962  1.000 

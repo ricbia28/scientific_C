@@ -1,0 +1,92 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+double m=1;
+
+typedef struct{
+  double x,v,dt,l;
+    int n, tmax;
+} param;
+
+//ACCELERAZIONE
+double ac(double x, double v, double l){
+  return exp(-x/2)*log(x)*(log(x)-(4./x))-l*v;
+}
+
+
+void rk4(param s){
+  double x,dx1, dx2, dx3, dx4;
+  double v,dv1, dv2, dv3, dv4;
+  int i;
+  x=s.x;
+  v=s.v;
+  for(i=0;i<s.n;i++){
+    dx1=v*s.dt;
+    dv1=ac(x,v,s.l)*s.dt;
+    
+    dx2=(v+dv1/2)*s.dt;
+    dv2=ac(x+dx1/2,v+dv1/2,s.l)*s.dt;
+    
+    dx3=(v+dv2/2)*s.dt;
+    dv3=ac(x+dx2/2,v+dv2/2,s.l)*s.dt;
+    
+    dx4=(v+dv3)*s.dt;
+    dv4=ac(x+dx3,v+dv3,s.l)*s.dt;
+    
+    x=x+(dx1+2*dx2+2*dx3+dx4)/6;
+    v=v+(dv1+2*dv2+2*dv3+dv4)/6;
+  }
+  printf("%lg %lg %.14lf\n", s.v, s.l, x);
+}
+
+int main(int argc, char *argv[]){
+    param rb;
+    int control;
+
+    if(argc != 5){
+        fprintf(stderr,"Hai sbagliato a inserire qualche dato\n");
+        fprintf(stderr,"usage:%s 1)velocita' 2)dt 3)tmax  4)coefficente\n\n",argv[0]);
+	fprintf(stderr,"I dati devono essere tutti equispaziati da uno spazio\n\n");
+	fprintf(stderr,"Il valore della velocita' inserito deve essere in valore assoluto,\n");
+	fprintf(stderr,"in quanto una volta inserito il programma lo considerera' come negativo\n\n");
+	fprintf(stderr,"Il coefficente per la parte di attrito può anche essere posto uguale a 0,\n");
+	fprintf(stderr,"in questo modo, oviamente, non verra' considerata la parte di attrito nel moto\n\n");
+        fprintf(stderr,"STO USCENDO...\n");
+        exit(EXIT_FAILURE);
+    }
+
+    rb.x = 10;
+    printf("#Posizione iniziale-->%lg\n",rb.x);
+    rb.v = -(atof(argv[1]));
+    printf("#Prima velocita' iniziale-->%lg\n",rb.v);
+    rb.dt = atof(argv[2]);
+    printf("#Passo di integrazione-->%g\n",rb.dt);
+    rb.tmax = atoi(argv[3]);
+    printf("#Tempo massimo di integrazione-->%i\n",rb.tmax);
+
+    rb.l=atof(argv[4]);
+    printf("#Primo coefficente lambda -->%g\n",rb.l);
+    
+    rb.n=ceil(rb.tmax/rb.dt);
+    printf("#Numero di passi-->%i\n",rb.n);
+
+
+
+    printf("#E' stato utilizzato l'algoritmo Runge-Kutta del quarto ordine\n");
+    printf("#Legenda\n");
+    printf("#1:v0 2:l 3:x (posizione asintotica)\n");
+
+    while(rb.v <= 0){
+      rb.l=atof(argv[4]);
+      while(rb.l >= 0){
+	rk4(rb);
+	rb.l=rb.l-0.002;
+      }
+      rb.v=rb.v+0.04;
+    }
+    exit(EXIT_SUCCESS);
+
+
+  
+}
