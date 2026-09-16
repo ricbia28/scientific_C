@@ -1,0 +1,300 @@
+
+
+*******************************************************************************
+Wed Dec  2 12:42:03 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 10000
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=A*log(x)**4
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 1 out of 10000
+x               = 1              
+z               = 0              
+
+Current set of parameters
+=========================
+A               = 1              
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Dec  2 12:42:38 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 10000
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=A*log(x)**4
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 1 out of 10000
+x               = 1              
+z               = 0              
+
+Current set of parameters
+=========================
+A               = 1              
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Dec  2 12:44:14 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 100000
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=A*log(x)**4
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 1 out of 100000
+x               = 1              
+z               = 0              
+
+Current set of parameters
+=========================
+A               = 1              
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Dec  2 12:46:54 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 100000
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*log(x)**4
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 1 out of 100000
+x               = 1              
+z               = 0              
+
+Current set of parameters
+=========================
+a               = 1              
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Dec  2 12:49:50 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 100000
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*log(x)**4
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 1 out of 100000
+x               = 0.1            
+z               = 0              
+
+Current set of parameters
+=========================
+a               = 0.1            
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Dec  2 12:50:33 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 100000
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a+b*log(x)**4
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 1 out of 100000
+x               = 0.1            
+z               = 0              
+
+Current set of parameters
+=========================
+a               = 0.1            
+b               = 1              
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Dec  2 12:53:34 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 100000
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*log(x)**4
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 1 out of 100000
+x               = 1              
+z               = 0              
+
+Current set of parameters
+=========================
+a               = 1              
+b               = 1              
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Dec  2 12:53:38 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 100000
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*log(x)**4
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 1 out of 100000
+x               = 1              
+z               = 0              
+
+Current set of parameters
+=========================
+a               = 1              
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Dec  2 12:56:29 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 99999
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*log(x)**4
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.3999129528e+13   0.00e+00  1.33e+04    1.000000e+00
+   2 1.5149401802e+08  -9.24e-01  1.33e+02    1.135104e-01
+
+After 2 iterations the fit converged.
+final sum of squares of residuals : 1.51494e+08
+rel. change during last iteration : -9.24061e-06
+
+degrees of freedom    (FIT_NDF)                        : 99998
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 38.9226
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1514.97
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.11351          +/- 9.222e-06    (0.008124%)
+
+
+*******************************************************************************
+Wed Dec  2 12:56:57 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 99999
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*log(x)**4
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.5149401802e+08   0.00e+00  1.51e+03    1.135104e-01
+   1 1.5149401802e+08   0.00e+00  1.51e+04    1.135104e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 1.51494e+08
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 99998
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 38.9226
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1514.97
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.11351          +/- 9.222e-06    (0.008124%)
+
+
+*******************************************************************************
+Wed Dec  2 12:58:02 2020
+
+
+FIT:    data read from 'dist.dat' u 1:2
+        format = x:z
+        #datapoints = 99999
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*log(x)**4
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.5149401802e+08   0.00e+00  1.51e+03    1.135104e-01
+   1 1.5149401802e+08   0.00e+00  1.51e+04    1.135104e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 1.51494e+08
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 99998
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 38.9226
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1514.97
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.11351          +/- 9.222e-06    (0.008124%)
