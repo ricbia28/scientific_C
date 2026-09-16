@@ -1,0 +1,322 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#define PI 3.141592
+double x0, v0, w2, k, m, e0;
+int tmax;
+
+//ENERGIA
+double e(double x, double v){
+  return (0.5*k*x*x)+(0.5*m*v*v);
+}
+
+//ACCELERAZIONE
+double a(double x, double v, double t){
+  return -w2*x;
+}
+
+//SEMIPERIDODI
+void sp(double * x, double dt, int n){
+  FILE * fp;
+  int i;
+  double Tv, T, tnew, told;
+  told=tmax+10; //la traiettoria non potrà essere a zero per un tempo maggiore a quello di integrazione, assegnando quindi un valore non possibile si salta il primo 0 della traiettoria
+  Tv=PI/w2;
+  fp=fopen("semiperiodi.dat","w");
+  fprintf(fp,"#Legenda: 1)Semiperiodo 2)Differenza con il semiperiodo calcolato direttamente\n");
+  for(i=0;i<=n;i++){
+    if(x[i]*x[i+1]<=0){
+      tnew=(dt*i*x[i+1]-dt*(i+1)*x[i])/(x[i+1]-x[i]);
+      if(told =! tmax+10){
+	T=tnew-told;
+	fprintf(stderr,"%lg %lg\n\n", T, T-Tv );
+      }
+      told=tnew;
+      i++;
+    }
+  }
+  fclose(fp);
+}
+
+void eulero(double dt, int n ){
+  double x, v, temp;
+  double * tra;
+  int i;
+  x=x0;
+  v=v0;
+  tra=(double *)calloc(n,sizeof(double));
+  if(tra==NULL){
+    fprintf(stderr,"Errore nell'allocazione");
+    exit(EXIT_FAILURE);
+  }
+  for(i=0;i<n;i++){
+    tra[i]=x;
+    printf("%lg %lg %lg %lg %lg\n",i*dt ,x ,v,(e(x,v)-e0)/e0,e(x,v));
+    temp=x;
+    x=x+v*dt;
+    v=v-w2*temp*dt;
+  }
+  printf("%lg %lg %lg %lg %lg %lg LAST\n\n", i*dt, x, v, (e(x,v)-e0)/e0, e(x,v), dt);
+  sp(tra, dt, n);
+  free(tra);
+}
+
+
+void cromer(double dt, int n ){
+  double x, v;
+  int i;
+  double * tra;
+  x=x0;
+  v=v0;
+  tra=(double *)calloc(n,sizeof(double));
+  if(tra==NULL){
+    fprintf(stderr,"Errore nell'allocazione");
+    exit(EXIT_FAILURE);
+  }
+  for(i=0;i<n;i++){
+    tra[i]=x;
+    printf("%lg %lg %lg %lg %lg\n",i*dt ,x ,v,(e(x,v)-e0)/e0,e(x,v));
+    v=v-w2*x*dt;
+    x=x+v*dt;
+  }
+  printf("%lg %lg %lg %lg %lg %lg LAST\n\n", i*dt, x, v, (e(x,v)-e0)/e0, e(x,v), dt);
+  sp(tra, dt, n);
+  free(tra);
+}
+
+
+void leapfrog(double dt, int n ){
+  double x, v;
+  int i;
+  double * tra;
+  x=x0;
+  v=v0-w2*x0*(dt/2);
+  tra=(double *)calloc(n,sizeof(double));
+  if(tra==NULL){
+    fprintf(stderr,"Errore nell'allocazione");
+    exit(EXIT_FAILURE);
+  }
+  for(i=0;i<n;i++){
+    tra[i]=x;
+    printf("%lg %lg %lg %lg %lg\n",i*dt ,x ,v+w2*x*(dt/2),(e(x,v+w2*x*(dt/2))-e0)/e0,e(x,v+w2*x*(dt/2)));
+    x=x+v*dt;
+    v=v-w2*x*dt;
+  }
+  printf("%lg %lg %lg %lg %lg %lg LAST\n\n", i*dt, x, v+w2*x*(dt/2), (e(x,v+w2*x*(dt/2))-e0)/e0, e(x,v+w2*x*(dt/2)), dt);
+  sp(tra, dt, n);
+  free(tra);
+}
+
+void verletvelocita(double dt, int n ){
+  double x, v, a, temp;
+  int i;
+  double * tra;
+  x=x0;
+  v=v0;
+  a=-w2*x0;
+  tra=(double *)calloc(n,sizeof(double));
+  if(tra==NULL){
+    fprintf(stderr,"Errore nell'allocazione");
+    exit(EXIT_FAILURE);
+  }
+  for(i=0;i<n;i++){
+    tra[i]=x;
+    printf("%lg %lg %lg %lg %lg\n",i*dt ,x ,v,(e(x,v)-e0)/e0,e(x,v));
+    x=x+v*dt+(0.5)*a*(dt*dt);
+    temp=a;
+    a=-w2*x;
+    v=v+((temp+a)/2)*dt;
+  }
+  printf("%lg %lg %lg %lg %lg %lg LAST\n\n", i*dt, x, v, (e(x,v)-e0)/e0, e(x,v), dt);
+  sp(tra, dt, n);
+  free(tra);
+}
+
+void verletposizioni(double dt, int n ){
+  double x, xnew, xold, v, a;
+  int i;
+  double * tra;
+  x=x0;
+  v=v0;
+  a=-w2*x0;
+  tra=(double *)calloc(n,sizeof(double));
+  if(tra==NULL){
+    fprintf(stderr,"Errore nell'allocazione");
+    exit(EXIT_FAILURE);
+  }
+  xnew=x+v*dt+(0.5)*a*(dt*dt);
+  for(i=0;i<n;i++){
+    tra[i]=x;
+    printf("%lg %lg %lg %lg %lg\n",i*dt ,x ,v,(e(x,v)-e0)/e0,e(x,v));
+    xold=x;
+    x=xnew;
+    a=-w2*x; 
+    xnew=2*x-xold+a*(dt*dt);
+    v=(xnew-xold)/(2*dt);
+  }
+  printf("%lg %lg %lg %lg %lg %lg LAST\n\n", i*dt, x, v, (e(x,v)-e0)/e0, e(x,v), dt);
+  sp(tra, dt, n);
+  free(tra);
+}
+
+
+void rk2(double dt, int n ){
+  double x,xold, v;
+  int i;
+  double * tra;
+  x=x0;
+  v=v0;
+  tra=(double *)calloc(n,sizeof(double));
+  if(tra==NULL){
+    fprintf(stderr,"Errore nell'allocazione");
+    exit(EXIT_FAILURE);
+  }
+  for(i=0;i<n;i++){
+    tra[i]=x;
+    printf("%lg %lg %lg %lg %lg\n",i*dt ,x ,v,(e(x,v)-e0)/e0,e(x,v));
+    xold=x;
+    //x=x+v*dt+0.5*a(x,0,0)*dt*dt;
+    //v=v+0.5*a(xold,0,0)*dt+0.5*a(xold+v*dt,0,0)*dt;
+    x=x+(v+a(x,v,0)*dt*0.5)*dt;
+    v=v+a((xold+v*dt*0.5),(v+a(xold,v,0)*dt*0.5),0)*dt;
+      
+  }
+  printf("%lg %lg %lg %lg %lg %lg LAST\n\n", i*dt, x, v, (e(x,v)-e0)/e0, e(x,v), dt);
+  sp(tra, dt, n);
+  free(tra);
+}
+
+
+void rk4(double dt, int n ){
+  double x,dx1, dx2, dx3, dx4;
+  double v,dv1, dv2, dv3, dv4;
+  int i;
+  double * tra;
+  x=x0;
+  v=v0;
+  tra=(double *)calloc(n,sizeof(double));
+  if(tra==NULL){
+    fprintf(stderr,"Errore nell'allocazione");
+    exit(EXIT_FAILURE);
+  }
+  for(i=0;i<n;i++){
+    tra[i]=x;
+    printf("%lg %lg %lg %lg %lg\n",i*dt ,x ,v,(e(x,v)-e0)/e0,e(x,v));
+    dx1=v*dt;
+    dv1=a(x,0,i*dt)*dt;
+    dx2=(v+dv1/2)*dt;
+    dv2=a(x+dx1/2,0,i*dt+dt/2)*dt;
+    dx3=(v+dv2/2)*dt;
+    dv3=a(x+dx2/2,0,i*dt+dt/2)*dt;
+    dx4=(v+dv3)*dt;
+    dv4=a(x+dx3,0,i*dt+dt)*dt;
+    x=x+(dx1+2*dx2+2*dx3+dx4)/6;
+    v=v+(dv1+2*dv2+2*dv3+dv4)/6;
+  }
+  printf("%lg %lg %lg %lg %lg %lg LAST\n\n", i*dt, x, v, (e(x,v)-e0)/e0, e(x,v), dt);
+  sp(tra, dt, n);
+  free(tra);
+}
+
+
+
+int main(int argc, char *argv[]){
+  if(argc=!2){
+    fprintf(stderr,"Hai sbagliato a inserire qualche dato\n");
+    fprintf(stderr,"usage:%s numero algoritmo dt \n",argv[0]);
+    fprintf(stderr,"sto uscendo...\n");
+    exit(EXIT_FAILURE);
+  }
+  int algo, ndt, n, control=0;
+  double dt;
+
+  scanf("%lg\n",&x0);
+  printf("#Posizione iniziale-->%lg\n",x0);
+  scanf("%lg\n",&v0);
+  printf("#Velocita' iniziale-->%lg\n",v0);
+  scanf("%lg\n",&k);
+  printf("#Costante elastica-->%lg\n",k);
+  scanf("%lg\n",&m);
+  printf("#Massa oscillante-->%lg\n",m);
+  scanf("%i\n",&tmax);
+  printf("#Tempo massimo di integrazione-->%i\n",tmax);
+
+  w2=k/m;
+  printf("#Pulsazione al quadrato-->%g\n",w2);
+  
+  algo = atoi(argv[1]);
+  dt = atof(argv[2]);
+  printf("#Primo passo di tempo su cui si integra-->%g\n",dt);
+
+  e0=e(x0,v0);
+
+  n=(int)(tmax/dt);
+  if(n*dt<tmax)n++;
+  
+
+  if(algo==1){
+    printf("#E' stato utilizzato l'algoritmo di Eulero\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v 4:dE/Eo 5:E\n");
+    eulero(dt,n);
+    control=1;
+  }
+    
+  if(algo==2){
+    printf("#E' stato utilizzato l'algoritmo di Eulero-Cromer\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v 4:dE/Eo 5:E\n");
+    cromer(dt,n);
+    control=1;
+  }
+
+  if(algo==3){
+    printf("#E' stato utilizzato l'algoritmo Leap Frog\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v 4:dE/Eo 5:E\n");
+    leapfrog(dt,n);
+    control=1;
+  }
+
+  if(algo==4){
+    printf("#E' stato utilizzato l'algoritmo Verlet-Velocita'\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v 4:dE/Eo 5:E\n");
+    verletvelocita(dt,n);
+    control=1;
+  }
+
+  if(algo==5){
+    printf("#E' stato utilizzato l'algoritmo Verlet-Posizioni\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v 4:dE/Eo 5:E\n");
+    verletposizioni(dt,n);
+    control=1;
+  }
+
+  if(algo==6){
+    printf("#E' stato utilizzato l'algoritmo Runge-Kutta del secondo ordine\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v 4:dE/Eo 5:E\n");
+    rk2(dt,n);
+    control=1;
+  }
+
+  if(algo==7){
+    printf("#E' stato utilizzato l'algoritmo Runge-Kutta del quarto ordine\n");
+    printf("#Legenda\n");
+    printf("#1:t 2:x 3:v 4:dE/Eo 5:E\n");
+    rk4(dt,n);
+    control=1;
+  }
+  
+  
+  if(control==0){
+    fprintf(stderr,"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+    fprintf(stderr,"Attenzione\n");
+    fprintf(stderr,"C'e' stato un errore nella scelta dell'algoritmo, sto uscento...\n");
+    fprintf(stderr,"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+  }
+
+  exit(EXIT_SUCCESS);
+}
